@@ -14,13 +14,17 @@ public class ArrayStack<T> implements GenericStack<T> {
 
     @Override
     public void push(T element) {
+        if (element == null) {
+            throw new IllegalArgumentException("Null elements are not allowed in the stack.");
+        }
         if (size == stack.length) {
-            stack = Arrays.copyOf(stack, stack.length * 2);
+            stack = Arrays.copyOf(stack, stack.length * 2); 
         }
         stack[size++] = element;
         System.out.println("Added: " + element);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T pop() {
         if (isEmpty()) {
@@ -29,10 +33,17 @@ public class ArrayStack<T> implements GenericStack<T> {
         }
         T element = (T) stack[--size];
         stack[size] = null;
+
+        // Optional: Shrink if size is 1/4th of array length
+        if (size > 0 && size == stack.length / 4) {
+            stack = Arrays.copyOf(stack, stack.length / 2);
+        }
+
         System.out.println("Removed: " + element);
         return element;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T peek() {
         if (isEmpty()) {
